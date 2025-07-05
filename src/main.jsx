@@ -1,10 +1,16 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
-import './index.css'
+
 import App from './App.jsx'
+
+import AppBar from './AppBar'
+import Container from '@mui/material/Container';
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <App />
+    <Container fixed>
+      <AppBar />
+      <App />
+    </Container>
   </StrictMode>,
 )
