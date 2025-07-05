@@ -4,6 +4,8 @@
 
 ---
 
+## React
+
 ```powershell
 npm create vite@latest . -- --template react
 ```
@@ -27,8 +29,16 @@ npm install
 npm run dev
 ```
 
+## Peer.js
+
 ```powershell
 npm install peerjs
+```
+
+## MUI
+
+```powershell
+npm install @mui/material @emotion/react @emotion/styled @fontsource/roboto @mui/icons-material
 ```
 
 ---
