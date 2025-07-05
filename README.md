@@ -31,6 +31,8 @@ npm run dev
 
 ## Peer.js
 
+- https://www.npmjs.com/package/peerjs
+
 ```powershell
 npm install peerjs
 ```
@@ -39,6 +41,12 @@ npm install peerjs
 
 ```powershell
 npm install @mui/material @emotion/react @emotion/styled @fontsource/roboto @mui/icons-material
+```
+
+- https://www.npmjs.com/package/react-drag-drop-files
+
+```powershell
+npm install react-drag-drop-files --force
 ```
 
 ---

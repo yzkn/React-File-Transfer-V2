@@ -7,10 +7,8 @@ import AppBar from './AppBar'
 import Container from '@mui/material/Container';
 
 createRoot(document.getElementById('root')).render(
-  <StrictMode>
-    <Container fixed>
-      <AppBar />
-      <App />
-    </Container>
-  </StrictMode>,
+  <Container fixed>
+    <AppBar />
+    <App />
+  </Container>,
 )
