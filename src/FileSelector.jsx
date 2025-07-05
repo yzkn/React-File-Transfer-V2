@@ -52,17 +52,18 @@ function FileSelector() {
                 });
 
                 conn.on('error', function (err) {
+                    // console.log('conn.on error', err.type);
                     switch (err.type) {
                         case 'negotiation-failed':
                             try {
-                                // PEERJS_DEFAULT_IDに接続できなかった場合は、自分が受信側(PEERJS_DEFAULT_ID)として待機する
+                                // PEERJS_DEFAULT_IDが既に使用されている場合の処理
                                 conn.close();
                                 console.log('conn.close()');
 
                                 peer.destroy();
                                 console.log('peer.destroy()');
 
-                                waitForSender();
+                                startWaiting();
                             } catch (error) {
                                 console.error({ error });
                             }
@@ -79,44 +80,19 @@ function FileSelector() {
         });
     };
 
-    const waitForSender = () => {
-        console.log('waitForSender()');
+    const startWaiting = () => {
+        console.log('startWaiting()');
 
-        // 受信側として待機する処理を実装
-        try {
-            const peer = new Peer(PEERJS_DEFAULT_ID);
-            console.log('waitForSender()', peer);
+        const peer = new Peer(PEERJS_DEFAULT_ID);
+        console.log({ peer });
 
-            peer.on('open', function (id) {
-                console.log('waitForSender()', 'peer.on open');
-
-                console.log('waitForSender()', 'My peer ID is: ' + id);
-
-                //
-                var peer2 = new Peer('777');
-                console.log('peer2', peer2);
-                var conn2 = peer.connect(id);
-                console.log('conn2', conn2);
-                // on open will be launch when you successfully connect to PeerServer
-                conn2.on('open', function () {
-                    // here you have conn.id
-                    conn2.send('hi!');
-                });
-                //
+        peer.on('connection', function (conn) {
+            console.log('peer.on connection', conn);
+            conn.on('data', function (data) {
+                console.log(data);
             });
+        });
 
-            peer.on('connection', function (conn) {
-                console.log('waitForSender()', 'peer.on connection');
-
-                conn.on('data', function (data) {
-                    console.log('waitForSender()', 'conn.on data');
-
-                    console.log('waitForSender()', data);
-                });
-            });
-        } catch (error) {
-            console.error('waitForSender()', error);
-        }
     };
 
     React.useEffect(() => {
