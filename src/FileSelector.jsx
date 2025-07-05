@@ -29,7 +29,7 @@ function FileSelector() {
         console.log('connectToPeer()');
 
         // ここでPEERJS_DEFAULT_IDに接続する処理を実装
-        const peer = new Peer(generatePeerId());
+        let peer = new Peer(generatePeerId());
         console.log({ peer });
 
         peer.on('open', function (id) {
@@ -37,7 +37,7 @@ function FileSelector() {
 
             try {
                 // PEERJS_DEFAULT_IDに接続を試みる
-                const conn = peer.connect(PEERJS_DEFAULT_ID);
+                let conn = peer.connect(PEERJS_DEFAULT_ID);
                 console.log({ conn });
 
                 conn.on('open', function () {
@@ -58,9 +58,11 @@ function FileSelector() {
                             try {
                                 // PEERJS_DEFAULT_IDが既に使用されている場合の処理
                                 conn.close();
+                                conn = null;
                                 console.log('conn.close()');
 
                                 peer.destroy();
+                                peer = null;
                                 console.log('peer.destroy()');
 
                                 startWaiting();
@@ -85,6 +87,10 @@ function FileSelector() {
 
         const peer = new Peer(PEERJS_DEFAULT_ID);
         console.log({ peer });
+
+        peer.on('open', function (id) {
+            console.log('peer.on open', 'My peer ID is: ' + id);
+        });
 
         peer.on('connection', function (conn) {
             console.log('peer.on connection', conn);
