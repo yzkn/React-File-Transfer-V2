@@ -52,28 +52,7 @@ function FileSelector() {
                 });
 
                 conn.on('error', function (err) {
-                    // console.log('conn.on error', err.type);
-                    switch (err.type) {
-                        case 'negotiation-failed':
-                            try {
-                                // PEERJS_DEFAULT_IDが既に使用されている場合の処理
-                                conn.close();
-                                conn = null;
-                                console.log('conn.close()');
-
-                                peer.destroy();
-                                peer = null;
-                                console.log('peer.destroy()');
-
-                                startWaiting();
-                            } catch (error) {
-                                console.error({ error });
-                            }
-
-                            break;
-                        default:
-                            console.log('conn.on error', err.type);
-                    }
+                    console.log('conn.on error', err.type);
                 });
 
             } catch (error) {
@@ -85,7 +64,7 @@ function FileSelector() {
     const startWaiting = () => {
         console.log('startWaiting()');
 
-        const peer = new Peer(PEERJS_DEFAULT_ID);
+        let peer = new Peer(PEERJS_DEFAULT_ID);
         console.log({ peer });
 
         peer.on('open', function (id) {
@@ -99,6 +78,27 @@ function FileSelector() {
             });
         });
 
+        peer.on('error', function (error) {
+            switch (error.type) {
+                case 'unavailable-id':
+                    console.debug(`The id ${PEERJS_DEFAULT_ID} is taken.`);
+                    try {
+                        // PEERJS_DEFAULT_IDが既に使用されている場合の処理
+                        peer.destroy();
+                        peer = null;
+                        console.log('peer.destroy()');
+
+                        // 既存のPeerに接続を試みる
+                        connectToPeer();
+                    } catch (error) {
+                        console.error({ error });
+                    }
+
+                    break;
+                default:
+                    console.log('conn.on error', error.type);
+            }
+        });
     };
 
     React.useEffect(() => {
@@ -107,7 +107,7 @@ function FileSelector() {
         let firstRun = true;
         if (firstRun) {
             // 初回のみ実行
-            connectToPeer();
+            startWaiting();
 
             console.log('Initialized');
         }
